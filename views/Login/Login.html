@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Login</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background-color: rgba(219, 240, 240, 0.575);
+        font-family: sans-serif;
+      }
+      .container {
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .form {
+        position: relative;
+        width: 100%;
+        max-width: 380px;
+        padding: 80px 40px 40px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 15px black;
+      }
+      .form img {
+        position: absolute;
+        top: -80px;
+        left: 7.5em;
+        width: 140px;
+        background-color: white;
+        border-radius: 50%;
+      }
+      .form h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: rgba(17, 129, 194, 0.884);
+      }
+      .form .inputs {
+        position: relative;
+      }
+      .form .inputs input {
+        width: 100%;
+        padding: 10px 0;
+        font-size: 20px;
+        margin-bottom: 30px;
+        border: none;
+        border-bottom: 1px solid black;
+        outline: none;
+      }
+      .form .inputs label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 10px 0;
+        font-size: 1rem;
+        pointer-events: none;
+        transition: 0.3s ease-in-out;
+      }
+      .form .inputs input:focus ~ label,
+      .form .inputs input:valid ~ label {
+        transform: translateY(-18px);
+        color: rgba(17, 129, 194, 0.884);
+        font-size: 0.8rem;
+      }
+      .submit-btn {
+        display: block;
+        margin-left: auto;
+        border: none;
+        outline: none;
+        background: rgba(17, 129, 194, 0.884);
+        color: white;
+        font-size: 1rem;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .forgot-pw {
+        font-size: 13px;
+        color: blue;
+        text-decoration: none;
+      }
+      .forgot-pw:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 500px) {
+        .form {
+          max-width: 300px;
+        }
+        .form img {
+          width: 120px;
+          left: 5.5em;
+          top: -70px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <form class="form" method="POST" action="/login">
+        <img
+          src="https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_640.png"
+          alt="img"
+        />
+        <h2>Login</h2>
+        <div class="inputs">
+          <input type="text" name="username" id="login_User" required />
+          <label for="login_User">Username</label>
+        </div>
+        <div class="inputs">
+          <input
+            name="password"
+            type="password"
+            name="loginPassword"
+            id="loginPassword"
+            required
+          />
+          <label for="loginPassword">Password</label>
+        </div>
+        <button class="submit-btn">Login</button>
+        <a href="#" class="forgot-pw">Forgot Password?</a>
+      </form>
+    </div>
+  </body>
+</html>
