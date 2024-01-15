@@ -6,15 +6,27 @@
     <title>Login</title>
     <style>
       button {
-        margin-left: 45%;
+        margin-left: 47%;
         cursor: pointer;
+      }
+      .container{
+        text-align: center;
+      }
+      .container button{
+        margin: 10px;
       }
     </style>
   </head>
   <body>
-    <h1 style="font-size: 50px; text-align: center">Login Successfully!</h1>
-    <form action="/protected" method="get">
-      <button>Student data</button>
-    </form>
+    <h3 style="text-align: center">Login Successfully!</h3>
+    <h1 style="font-size: 50px; text-align: center">Welcome to NOTES</h1>
+    <div class="container">
+      <form action="/notes" method="GET">
+        <button>Click here!</button>
+      </form>
+      <form action="/logout" method="get">
+        <button>Logout</button>
+      </form>
+    </div>
   </body>
 </html>
