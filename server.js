@@ -35,7 +35,7 @@ if (typeof localStorage === "undefined" || localStorage === null) {
 
 const authenticateToken = (req, res, next) => {
   const token = localStorage.getItem("access_token");
-  console.log(token);
+  // console.log(token);
 
   if (!token) {
     res.status(401).send("Login to access Notes");
