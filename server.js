@@ -64,7 +64,7 @@ app.get("/notes", authenticateToken, (req, res) => {
     res.cookie("visited", true);
   } else {
     res.send(
-      `<h1 style="text-align:center">Session logged out! Login again</h1>`
+      `<script> alert("Session logged out! Login again"); window.location.href = "/login"; </script>`
     );
   }
 });
@@ -80,14 +80,16 @@ app.post("/register", async (req, res) => {
     res.send(`<h1>Username & Password are required</h1>`);
   }
   if (user.password.length < 4) {
-    res.send(`<h1 style="text-align:center">Password length must be >= 4</h1>`);
+    res.send(
+      `<script> alert("Password length must be >= 4"); window.location.href = "/register"; </script>`
+    );
   }
   const username = req.body.username;
   const userExist = await User.findOne({ username });
 
   if (userExist) {
     res.send(
-      `<h1 style="font-size:50px;text-align:center">Username already exist`
+      `<script> alert("username already exist!"); window.location.href = "/register"; </script>`
     );
     return;
   }
@@ -103,7 +105,7 @@ app.post("/register", async (req, res) => {
     res.sendFile(__dirname + "/views/registerdone.html");
   } catch (err) {
     res.send(
-      `<h1 style="font-size:50px;text-align:center">Couldn't register account</h1>`
+      `<script> alert("Could not register account"); window.location.href = "/register"; </script>`
     );
   }
 });
@@ -119,14 +121,16 @@ app.post("/login", async (req, res) => {
   )[0];
   if (!account) {
     res.send(
-      `<h1 style="text-align:center">No such account, check password & username</h1>`
+      `<script> alert("No such account, check password & username"); window.location.href = "/login"; </script>`
     );
     return;
   }
   //Account found
   const match = await bycrypt.compare(loginData.password, account.password);
   if (!match) {
-    res.sendFile(__dirname + "/views/incorrect.html");
+    res.send(
+      `<script> alert("INCORRECT Password"); window.location.href = "/login"; </script>`
+    );
     return;
   }
   const token = jwt.sign({ username: account.username }, secretKey, {
@@ -136,6 +140,7 @@ app.post("/login", async (req, res) => {
   localStorage.setItem("access_token", token);
   console.log(localStorage.getItem("access_token"));
   res.status(201).sendFile(__dirname + "/views/logindone.html");
+
   req.session.user = account;
   req.session.loggedIn = true;
 });
@@ -144,7 +149,9 @@ app.post("/login", async (req, res) => {
 app.get("/logout", (req, res) => {
   res.clearCookie("visited");
   req.session.loggedIn = false;
-  res.sendFile(__dirname + "/views/logout.html");
+  res.send(
+    `<script> alert("Logout successfully"); window.location.href = "/login"; </script>`
+  );
 });
 //--------------------------------------------------- ADD NOTE ------------------------------
 
@@ -153,9 +160,15 @@ app.post("/addnote", async (req, res) => {
     const content = req.body.content;
     const newNote = new Notes({ content });
     await newNote.save();
-    res.send("Note created successfully");
+    res.send(
+      `<script> alert("Note created successfully"); window.location.href = "/notes"; </script>`
+    );
   } catch (err) {
-    res.status(400).send(`Could not create a note`);
+    res
+      .status(400)
+      .send(
+        `<script>alert("Could not create a note"); window.location.href = "/notes"; </script>`
+      );
   }
 });
 //--------------------------------------------------- DELETE NOTE ----------------------------
@@ -164,9 +177,15 @@ app.post("/deletenote", async (req, res) => {
   try {
     const id = req.body.noteId;
     await Notes.findByIdAndDelete(id);
-    res.send("Note deleted successfully");
+    res.send(
+      `<script> alert("Note deleted successfully"); window.location.href = "/getnotes"; </script>`
+    );
   } catch {
-    res.status(400).send("Could not delete note");
+    res
+      .status(400)
+      .send(
+        `<script> alert("Could not delete note"); window.location.href = "/getnotes"; </script>`
+      );
   }
 });
 //--------------------------------------------------- GET NOTES -----------------------------
