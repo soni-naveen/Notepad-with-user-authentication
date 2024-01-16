@@ -102,7 +102,9 @@ app.post("/register", async (req, res) => {
 
   try {
     await newUser.save();
-    res.sendFile(__dirname + "/views/registerdone.html");
+    res.send(
+      `<script> alert("Registered successfully!"); window.location.href = "/login"; </script>`
+    );
   } catch (err) {
     res.send(
       `<script> alert("Could not register account"); window.location.href = "/register"; </script>`
