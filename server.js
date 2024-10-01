@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const User = require("./modals/User.js");
-const bycrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const jwt = require("jsonwebtoken");
@@ -21,12 +21,14 @@ app.use(
   session({
     // name: "user-cookie",
     secret: "secret-key",
+    resave: false,
+    saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 10, //10 minutes
+      maxAge: 1000 * 60 * 10, // 10 minutes
     },
   })
 );
-//------------------------------------------------ TOKEN ----------------------------------------
+//------------------------------------- TOKEN ----------------------------------------
 
 if (typeof localStorage === "undefined" || localStorage === null) {
   let LocalStorage = require("node-localstorage").LocalStorage;
@@ -55,7 +57,7 @@ const authenticateToken = (req, res, next) => {
 
 app.set("view engine", "hbs");
 
-//------------------------------------------------------- NOTES --------------------------------------
+//---------------------------------- NOTES --------------------------------------
 
 app.get("/notes", authenticateToken, (req, res) => {
   res.render("notes", { user: req.user });
@@ -68,7 +70,7 @@ app.get("/notes", authenticateToken, (req, res) => {
     );
   }
 });
-//------------------------------------------------------ REGISTRATION ------------------------------
+//--------------------------------- REGISTRATION --------------------------------
 
 app.get("/register", (req, res) => {
   res.sendFile(__dirname + "/views/SignUp/SignUp.html");
@@ -97,7 +99,7 @@ app.post("/register", async (req, res) => {
   const newUser = new User(user);
   const saltRounds = 10;
   //naveen -----> encrypt ----> shfowewineinfeoiewnfie
-  const hashedPwd = await bycrypt.hash(newUser.password, saltRounds);
+  const hashedPwd = await bcrypt.hash(newUser.password, saltRounds);
   newUser.password = hashedPwd;
 
   try {
@@ -111,7 +113,7 @@ app.post("/register", async (req, res) => {
     );
   }
 });
-//--------------------------------------------------------- LOGIN --------------------------------
+//----------------------------- LOGIN --------------------------------
 
 app.get("/login", (req, res) => {
   res.sendFile(__dirname + "/views/Login/Login.html");
@@ -128,7 +130,7 @@ app.post("/login", async (req, res) => {
     return;
   }
   //Account found
-  const match = await bycrypt.compare(loginData.password, account.password);
+  const match = await bcrypt.compare(loginData.password, account.password);
   if (!match) {
     res.send(
       `<script> alert("INCORRECT Password"); window.location.href = "/login"; </script>`
@@ -140,13 +142,13 @@ app.post("/login", async (req, res) => {
   });
 
   localStorage.setItem("access_token", token);
-  console.log(localStorage.getItem("access_token"));
+  // console.log(localStorage.getItem("access_token"));
   res.status(201).sendFile(__dirname + "/views/logindone.html");
 
   req.session.user = account;
   req.session.loggedIn = true;
 });
-//--------------------------------------------------- LOGOUT -------------------------------
+//------------------------------ LOGOUT -------------------------------
 
 app.get("/logout", (req, res) => {
   res.clearCookie("visited");
@@ -155,7 +157,7 @@ app.get("/logout", (req, res) => {
     `<script> alert("Logout successfully"); window.location.href = "/login"; </script>`
   );
 });
-//--------------------------------------------------- ADD NOTE ------------------------------
+//------------------------------ ADD NOTE ------------------------------
 
 app.post("/addnote", async (req, res) => {
   try {
@@ -173,7 +175,7 @@ app.post("/addnote", async (req, res) => {
       );
   }
 });
-//--------------------------------------------------- DELETE NOTE ----------------------------
+//----------------------------- DELETE NOTE ----------------------------
 
 app.post("/deletenote", async (req, res) => {
   try {
@@ -190,7 +192,7 @@ app.post("/deletenote", async (req, res) => {
       );
   }
 });
-//--------------------------------------------------- GET NOTES -----------------------------
+//------------------------------ GET NOTES -----------------------------
 
 app.get("/getnotes", async (req, res) => {
   try {
@@ -200,7 +202,7 @@ app.get("/getnotes", async (req, res) => {
     res.status(500).send("Internal server error!");
   }
 });
-//----------------------------------------------------- SERVER ------------------------------
+//------------------------------ SERVER --------------------------------
 
 app.listen(port, () => {
   console.log(

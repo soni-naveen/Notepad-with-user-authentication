@@ -1,2 +1,2 @@
-# BEE ETE
+# Notepad with user authentication
 
